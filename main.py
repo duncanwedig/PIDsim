@@ -16,9 +16,9 @@ size = width, height = 1000, 1000
 screen = pygame.display.set_mode(size)
 screen.fill([255,255,255])
 
-pid = PIDcontroller(10, .1, kI=.01, kD=.1, calcForce=calc_motor_torque)
+pid = PIDcontroller(100, .1, kI=.01, kD=.1)
 
-for n in range(5000):
+for n in range(20000):
     pid.step(.01, screen)
 
 pygame.display.flip()
