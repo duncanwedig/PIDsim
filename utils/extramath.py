@@ -6,6 +6,9 @@ def dist(point1, point2):
     distance = (math.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2))
     return distance
 
+def clamp(value, minimum, maximum):
+    return max(minimum, min(maximum, value))
+
 def avg(*args):
     sum = 0
     for item in args:

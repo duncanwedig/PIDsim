@@ -9,7 +9,7 @@ from utils.motor import Motor
 class PIDcontroller(object):
 
     def __init__(self, setpoint:float, kP:float, startpoint:float = 0, kI:float = 0, kD:float = 0,
-                 opposingForce:Callable = lambda x:x, motor:Motor = Motor(1961, .7, .71, 134)):
+                 opposingForce:Callable = lambda x:x, motor:Motor = Motor(312, .7, .71, 134)):
         self.start_point = startpoint
         self.current_point = startpoint
         self.setpoint = setpoint
@@ -56,10 +56,11 @@ class PIDcontroller(object):
 
     def calcPhysics(self, timestep:float, voltage:float):
         # This probably needs a better label, but simple implementations for now please
-        self.acceleration = self.motor.get_torque(self.velocity, voltage)
+        self.acceleration = self.motor.get_torque(voltage=voltage, velocity=self.velocity)
 
         # If opposing force were actually used, arguments would be supplied here probably
-        self.acceleration -= self.calcOpposingForce(0)
+        # self.acceleration -= self.calcOpposingForce(0.01)
+        # self.acceleration = math.copysign(abs(self.acceleration) - .01, self.acceleration)
 
         # Kinematics to get from acceleration and start velocity to position
         self.current_point += (self.velocity * timestep) + (0.5 * self.acceleration * (timestep**2))
@@ -77,8 +78,9 @@ class PIDcontroller(object):
         pygame.draw.circle(screen, (255,0,0), (x,y), 2)
 
     def step(self, timestep:float, screen:pygame.Surface):
-        voltage = self.calcPID(timestep)
+        voltage = extramath.clamp(self.calcPID(timestep), -12, 12)
         self.calcPhysics(timestep, voltage)
         self.draw(screen)
-        print("pos: ", self.current_point, "\nvelocity: ", self.velocity, "\nvoltage: ", voltage, "\naccel: ", self.acceleration)
+        print("pos: ", self.current_point, "\nvelocity: ", self.velocity, "\nvoltage: ", voltage,
+              "\naccel: ", self.acceleration, "\nerror: ", self.error, "\ntime: ", self.current_time)
         print("\n\nPterm: ", self.Pterm, "\nIterm: ", self.Iterm, "\nDterm: ", self.Dterm, "\n\n")
