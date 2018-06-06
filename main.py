@@ -18,7 +18,8 @@ screen = pygame.display.set_mode(size)
 screen.fill([255,255,255])
 
 # pid = PIDcontroller(setpoint=100, kP=2.5, kI=0, kD=15, motor=Motor(312, .7, .71, 134))
-pid = PIDcontroller(setpoint=100, kP=5, kI=0.001, kD=15, motor=Motor(88.5, 2.7, 2.42, 133))
+# pid = PIDcontroller(setpoint=100, kP=5, kI=0.001, kD=15, motor=Motor(88.5, 2.7, 2.42, 133))
+pid = PIDcontroller(setpoint=25, kP=4, kI=0.005, kD=1, motor=Motor(88.5, 2.7, 2.42, 133))
 
 for n in range(4000):
     pid.step(.01, screen)

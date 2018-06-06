@@ -15,10 +15,10 @@ class Motor(object):
 
         self.kT = stall_torque / stall_current
         self.R = battery_voltage / stall_current
-        self.kV = free_speed / (battery_voltage - free_current * self.R)
+        self.kV = (battery_voltage - free_current * self.R) / free_speed
 
     def get_torque(self, voltage:float, velocity:float):
-        return ( voltage - (velocity / self.kV) ) * self.kT / self.R
+        return ( voltage - (velocity * self.kV) ) * self.kT / self.R
 
     def print_data(self):
         print("kT: ", self.kT)
